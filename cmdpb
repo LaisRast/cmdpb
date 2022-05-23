@@ -1,0 +1,29 @@
+#!/bin/sh
+
+URL="example.com/"
+AUTH="-n"
+# AUTH="-u USERNAME:PASSWORD"
+
+while getopts "hd:u:s:a" x; do
+    case $x in
+        h) echo "cmdpb [-u ID] [-d ID] [FILE]"; exit 0;;
+        s) curl $AUTH "${URL}?id=${OPTARG}"; exit 0;;
+        a) curl $AUTH "${URL}"; exit 0;;
+        d) curl $AUTH -X DELETE "${URL}?id=${OPTARG}"; exit 0;;
+        u) id="$OPTARG";;
+        *) exit 1;;
+    esac
+done
+
+shift "$((OPTIND - 1))"
+
+if [ -t 0 ]
+then
+    if [ -e "$1" ]
+    then
+        curl $AUTH -F "c=@${1}" "${URL}${id}"
+        exit 0
+    fi
+    echo "^C to cancel, ^D to send"
+fi
+curl $AUTH -F "c=<-" "${URL}?id=${id}"
