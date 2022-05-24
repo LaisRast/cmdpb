@@ -6,7 +6,7 @@ AUTH="-n"
 
 while getopts "hd:u:s:a" x; do
     case $x in
-        h) echo "cmdpb [-u ID] [-d ID] [FILE]"; exit 0;;
+        h) echo "cmdpb [-a] [-s ID] [-u ID] [-d ID] [FILE]"; exit 0;;
         s) curl $AUTH "${URL}?id=${OPTARG}"; exit 0;;
         a) curl $AUTH "${URL}"; exit 0;;
         d) curl $AUTH -X DELETE "${URL}?id=${OPTARG}"; exit 0;;
