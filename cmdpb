@@ -10,7 +10,7 @@ while getopts "hd:u:s:a" x; do
         s) curl $AUTH "${URL}?id=${OPTARG}"; exit 0;;
         a) curl $AUTH "${URL}"; exit 0;;
         d) curl $AUTH -X DELETE "${URL}?id=${OPTARG}"; exit 0;;
-        u) id="$OPTARG";;
+        u) id="?id=${OPTARG}";;
         *) exit 1;;
     esac
 done
@@ -26,4 +26,4 @@ then
     fi
     echo "^C to cancel, ^D to send"
 fi
-curl $AUTH -F "c=<-" "${URL}?id=${id}"
+curl $AUTH -F "c=<-" "${URL}${id}"
