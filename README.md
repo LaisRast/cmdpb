@@ -6,7 +6,7 @@ MySQL.
 ## Get started
 
 ### Server-side:
-  Copy `index.php` and `secrets.php` to your server (say `example.com`).
+  Copy `cmdpb.php` and `secrets.php` to your server (say to `example.com/`).
   Edit `secrets.php` to provide login credentials and database configurations.
 
 ### Client-side:
@@ -28,39 +28,39 @@ Posting a new pastebin
 
 * from a `FILE`:
   ```
-  curl -n -F "c=@FILE" https://example.com/
+  curl -n -F "c=@FILE" https://example.com/cmdpb.php
   ```
   
 * From `stdin`:
   ```
-  echo Hello world | curl -n -F "c=<-" https://example.com/
+  echo Hello world | curl -n -F "c=<-" https://example.com/cmdpb.php
   ```
   
 * from a string:
   ```
-  curl -n -F "c=Hello world" https://example.com/
+  curl -n -F "c=Hello world" https://example.com/cmdpb.php
   ```
 
 Getting all pastebins:
 ```
-curl -n https://example.com/
+curl -n https://example.com/cmdpb.php
 ```
 
 Getting the pastebin with `id=ID`:
 ```
-curl -n "https://example.com/?id=ID"
+curl -n "https://example.com/cmdpb.php?id=ID"
 ```
 
 Deleting the pastebin with `id=ID`:
 ```
-curl -n -X DELETE "https://example.com/?id=ID"
+curl -n -X DELETE "https://example.com/cmdpb.php?id=ID"
 ```
 
 Updating the pastebin with `id=ID`:
 ```
-curl -n -F "c=Hello world" "https://example.com/?id=ID"
-curl -n -F "c=@file" "https://example.com/id=ID"
-echo Hello world | curl -n -F "c=<-" "https://example.com/?id=ID"
+curl -n -F "c=Hello world" "https://example.com/cmdpb.php?id=ID"
+curl -n -F "c=@file" "https://example.com/cmdpb.php?id=ID"
+echo Hello world | curl -n -F "c=<-" "https://example.com/cmdpb.php?id=ID"
 ```
 
 ## Shell script
@@ -68,7 +68,7 @@ A shell script `cmdpd` is also provided.
 To start using it,
 download it,
 make it executable
-and edit it to make the variable `URL` points to your server.
+and edit it to make the variable `URL` points to your `cmdpb.php`.
 
 Examples of use:
 ```

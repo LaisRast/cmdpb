@@ -1,6 +1,6 @@
 #!/bin/sh
 
-URL="example.com/"
+URL="https://example.com/cmdpb.php"
 AUTH="-n"
 # AUTH="-u USERNAME:PASSWORD"
 
