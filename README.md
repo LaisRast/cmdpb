@@ -64,7 +64,7 @@ echo Hello world | curl -n -F "c=<-" "https://example.com/cmdpb.php?id=ID"
 ```
 
 ## Shell script
-A shell script `cmdpd` is also provided.
+A shell script `cmdpb` is also provided.
 To start using it,
 download it,
 make it executable
@@ -72,13 +72,13 @@ and edit it to make the variable `URL` points to your `cmdpb.php`.
 
 Examples of use:
 ```
-cmdpd                         # post from what you write
-cmdpd file                    # post from file
-echo hello world | cmdpd      # post from stdin
-cmdpd -a                      # show all pastes
-cmdpd -s ID                   # show paste with id=ID
-cmdpd -d ID                   # delete paste with id=ID
-cmdpd -u ID                   # update paste with id=ID
+cmdpb                         # post from what you write
+cmdpb file                    # post from file
+echo hello world | cmdpb      # post from stdin
+cmdpb -a                      # show all pastes
+cmdpb -s ID                   # show paste with id=ID
+cmdpb -d ID                   # delete paste with id=ID
+cmdpb -u ID                   # update paste with id=ID
 ```
 
 ## Security
