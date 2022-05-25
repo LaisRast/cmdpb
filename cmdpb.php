@@ -38,9 +38,10 @@ if (!isset($_SERVER['PHP_AUTH_USER']) ||
 }
 
 // connect to database
-$conn = new mysqli($DBSERVER, $DBUSER, $DBPASS, $DBNAME);
-if ($conn->connect_error) {
-    exit("connection failed: " . $conn->connect_error);
+try {
+    $conn = new PDO("mysql:host=$DBSERVER;dbname=$DBNAME", $DBUSER, $DBPASS);
+} catch(PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
 }
 
 // create table if does not exist
@@ -54,23 +55,22 @@ if (isset($_GET["id"])) {
     $id  = $_GET["id"];
     // GET
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
-        $stmt = $conn->prepare("SELECT * FROM ". $TABLE_NAME . " WHERE id = ?");
-        $stmt->bind_param('i', $id);
+        $stmt = $conn->prepare("SELECT * FROM ". $TABLE_NAME . " WHERE id = :id");
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $result = $stmt->get_result();
-        if (mysqli_num_rows($result) != 1){
+        if ($stmt->rowCount() != 1){
             echo "id " . $id . " does not exist\n";
         } else {
-            $one = $result -> fetch_assoc();
+            $one = $stmt->fetch();
             echo $one["content"];
         }
     }
     // DELETE
     elseif ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-        $stmt = $conn->prepare("DELETE FROM " . $TABLE_NAME . " WHERE id = ?");
-        $stmt->bind_param('i', $id);
+        $stmt = $conn->prepare("DELETE FROM " . $TABLE_NAME . " WHERE id = :id");
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
-        if (mysqli_stmt_affected_rows($stmt) != 1) {
+        if ($stmt->rowCount() != 1) {
             echo "id " . $id . " does not exist\n";
         } else {
             echo "id " . $id . " has been deleted\n";
@@ -86,10 +86,9 @@ if (isset($_GET["id"])) {
             echo "please provide a value for the field c\n";
             exit;
         }
-        $stmt = $conn->prepare("UPDATE " . $TABLE_NAME . " SET content = ? WHERE id = ?");
-        $stmt->bind_param('si', $content, $id);
-        $stmt->execute();
-        if (mysqli_stmt_affected_rows($stmt) != 1) {
+        $stmt = $conn->prepare("UPDATE " . $TABLE_NAME . " SET content = :content WHERE id = :id");
+        $stmt->execute(array(":content" => $content, ":id" => $id));
+        if ($stmt->rowCount() != 1) {
             echo "id " . $id . " did not change or does not exist\n";
         } else {
             echo "id " . $id . " has been updated\n";
@@ -100,11 +99,12 @@ if (isset($_GET["id"])) {
 
 // INDEX
 if ($_SERVER["REQUEST_METHOD"] == "GET"){
-    $result = $conn->query("SELECT * FROM " . $TABLE_NAME . " ORDER BY id ASC");
-    while($row = $result->fetch_assoc()) {
+    $query = $conn->query("SELECT * FROM " . $TABLE_NAME . " ORDER BY id ASC");
+    foreach($query->fetchAll() as $row) {
         echo url() . "?id=" . $row["id"] . "\n";
-        $content = substr($row["content"], 0, 1000);
-        echo "\t" . str_replace("\n", "\n\t", $content) . "\n\n";
+        $content = substr($row["content"], 0, 100);
+        if (substr($content, -1) != "\n") { $content .= "\n"; }
+        echo "\t" . str_replace("\n", "\n\t", $content) . "\n";
     }
     exit;
 }
@@ -119,9 +119,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         echo "please provide a value for the field c\n";
         exit;
     }
-    $stmt = $conn->prepare("INSERT INTO " . $TABLE_NAME . " (content) VALUES (?)");
-    $stmt->bind_param('s', $content);
+    $stmt = $conn->prepare("INSERT INTO " . $TABLE_NAME . " (content) VALUES (:content)");
+    $stmt->bindParam(':content', $content);
     $stmt->execute();
-    echo url() . "?id=" . mysqli_insert_id($conn) . "\n";
+    echo url() . "?id=" . $conn->lastInsertId() . "\n";
     exit;
 }
