@@ -59,6 +59,7 @@ if (isset($_GET["id"])) {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         if ($stmt->rowCount() != 1){
+            header("HTTP/1.0 404 Not Found");
             echo "id " . $id . " does not exist\n";
         } else {
             $one = $stmt->fetch();
@@ -71,6 +72,7 @@ if (isset($_GET["id"])) {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         if ($stmt->rowCount() != 1) {
+            header("HTTP/1.0 404 Not Found");
             echo "id " . $id . " does not exist\n";
         } else {
             echo "id " . $id . " has been deleted\n";
