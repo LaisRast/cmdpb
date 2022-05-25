@@ -3,6 +3,8 @@
 A simple private command-line pastebin that uses HTTP basic authentication and
 MySQL.
 
+[![demo](https://asciinema.org/a/jGuvBJieK3pHCYMPJYHqUpuCy.svg)](https://asciinema.org/a/jGuvBJieK3pHCYMPJYHqUpuCy)
+
 ## Get started
 
 ### Server-side:
