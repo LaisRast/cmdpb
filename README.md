@@ -24,7 +24,7 @@ There are two options to authenticate using `curl`:
 
 
 ## Usage
-Posting a new pastebin
+Posting a new paste
 
 * from a `FILE`:
   ```
@@ -41,22 +41,22 @@ Posting a new pastebin
   curl -n -F "c=Hello world" https://example.com/cmdpb.php
   ```
 
-Getting all pastebins:
+Getting all pastes:
 ```
 curl -n https://example.com/cmdpb.php
 ```
 
-Getting the pastebin with `id=ID`:
+Getting the paste with `id=ID`:
 ```
 curl -n "https://example.com/cmdpb.php?id=ID"
 ```
 
-Deleting the pastebin with `id=ID`:
+Deleting the paste with `id=ID`:
 ```
 curl -n -X DELETE "https://example.com/cmdpb.php?id=ID"
 ```
 
-Updating the pastebin with `id=ID`:
+Updating the paste with `id=ID`:
 ```
 curl -n -F "c=Hello world" "https://example.com/cmdpb.php?id=ID"
 curl -n -F "c=@file" "https://example.com/cmdpb.php?id=ID"
@@ -72,13 +72,13 @@ and edit it to make the variable `URL` points to your `cmdpb.php`.
 
 Examples of use:
 ```
-cmdpd                         # paste from what you write
-cmdpd file                    # paste from file
-echo hello world | cmdpd      # paste from stdin
-cmdpd -a                      # show all pastebins
-cmdpd -s ID                   # show pastebin with id=ID
-cmdpd -d ID                   # delete pastebin with id=ID
-cmdpd -u ID                   # update pastebin with id=ID
+cmdpd                         # post from what you write
+cmdpd file                    # post from file
+echo hello world | cmdpd      # post from stdin
+cmdpd -a                      # show all pastes
+cmdpd -s ID                   # show paste with id=ID
+cmdpd -d ID                   # delete paste with id=ID
+cmdpd -u ID                   # update paste with id=ID
 ```
 
 ## Security
