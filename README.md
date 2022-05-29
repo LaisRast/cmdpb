@@ -8,8 +8,9 @@ MySQL.
 ## Get started
 
 ### Server-side:
-  Copy `cmdpb.php` and `secrets.php` to your server (say to `example.com/`).
-  Edit `secrets.php` to provide login credentials and database configurations.
+  Edit the secrets at the beginning of `cmdpb.php`
+  to provide login credentials and database configurations.
+  Then copy `cmdpb.php` to your server (say to `example.com/`).
 
 ### Client-side:
 You can communicate with the pastebin using `curl`

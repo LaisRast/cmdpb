@@ -5,6 +5,18 @@
  * authentication and MySQL.
  */
 
+/* Secretes */
+// login
+define("USERNAME", "user");             // login username
+define("PASSWORD", "password");         // login password
+
+// database
+define("DBSERVER", "localhost");        // database server
+define("DBUSER", "root");               // database user
+define("DBPASS", "");                   // database password
+define("DBNAME", "cmdpb");              // database name
+define("TABLE_NAME", "pastebins");      // table name
+
 function isSecure() {
     /* check if the connection is secture (https) */
     return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
@@ -23,14 +35,11 @@ header("Content-Type: text/plain");
 // check https
 if (!isSecure()){echo "please use https\n"; exit; }
 
-// secrets
-include 'secrets.php';
-
 // authenticate
 if (!isset($_SERVER['PHP_AUTH_USER']) ||
     !isset($_SERVER['PHP_AUTH_PW']) ||
-    ($_SERVER['PHP_AUTH_USER'] !== $USERNAME) ||
-    ($_SERVER['PHP_AUTH_PW'] !== $PASSWORD)) {
+    ($_SERVER['PHP_AUTH_USER'] !== USERNAME) ||
+    ($_SERVER['PHP_AUTH_PW'] !== PASSWORD)) {
     header('WWW-Authenticate: Basic realm="My Realm"');
     header('HTTP/1.0 401 Unauthorized');
     echo "You must login first\n";
@@ -39,13 +48,13 @@ if (!isset($_SERVER['PHP_AUTH_USER']) ||
 
 // connect to database
 try {
-    $conn = new PDO("mysql:host=$DBSERVER;dbname=$DBNAME", $DBUSER, $DBPASS);
+    $conn = new PDO("mysql:host=" . DBSERVER . ";dbname=" . DBNAME, DBUSER, DBPASS);
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
 
 // create table if does not exist
-$conn -> query("CREATE TABLE IF NOT EXISTS " . $TABLE_NAME . " (
+$conn -> query("CREATE TABLE IF NOT EXISTS " . TABLE_NAME . " (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     content LONGTEXT NOT NULL
 )");
@@ -55,7 +64,7 @@ if (isset($_GET["id"])) {
     $id  = $_GET["id"];
     // GET
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
-        $stmt = $conn->prepare("SELECT * FROM ". $TABLE_NAME . " WHERE id = :id");
+        $stmt = $conn->prepare("SELECT * FROM ". TABLE_NAME . " WHERE id = :id");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         if ($stmt->rowCount() != 1){
@@ -68,7 +77,7 @@ if (isset($_GET["id"])) {
     }
     // DELETE
     elseif ($_SERVER["REQUEST_METHOD"] == "DELETE") {
-        $stmt = $conn->prepare("DELETE FROM " . $TABLE_NAME . " WHERE id = :id");
+        $stmt = $conn->prepare("DELETE FROM " . TABLE_NAME . " WHERE id = :id");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         if ($stmt->rowCount() != 1) {
@@ -88,7 +97,7 @@ if (isset($_GET["id"])) {
             echo "please provide a value for the field c\n";
             exit;
         }
-        $stmt = $conn->prepare("UPDATE " . $TABLE_NAME . " SET content = :content WHERE id = :id");
+        $stmt = $conn->prepare("UPDATE " . TABLE_NAME . " SET content = :content WHERE id = :id");
         $stmt->execute(array(":content" => $content, ":id" => $id));
         if ($stmt->rowCount() != 1) {
             echo "id " . $id . " did not change or does not exist\n";
@@ -101,7 +110,7 @@ if (isset($_GET["id"])) {
 
 // INDEX
 if ($_SERVER["REQUEST_METHOD"] == "GET"){
-    $query = $conn->query("SELECT * FROM " . $TABLE_NAME . " ORDER BY id ASC");
+    $query = $conn->query("SELECT * FROM " . TABLE_NAME . " ORDER BY id ASC");
     foreach($query->fetchAll() as $row) {
         echo url() . "?id=" . $row["id"] . "\n";
         $content = substr($row["content"], 0, 100);
@@ -121,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         echo "please provide a value for the field c\n";
         exit;
     }
-    $stmt = $conn->prepare("INSERT INTO " . $TABLE_NAME . " (content) VALUES (:content)");
+    $stmt = $conn->prepare("INSERT INTO " . TABLE_NAME . " (content) VALUES (:content)");
     $stmt->bindParam(':content', $content);
     $stmt->execute();
     echo url() . "?id=" . $conn->lastInsertId() . "\n";
